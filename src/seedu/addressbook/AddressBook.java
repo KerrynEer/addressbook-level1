@@ -71,7 +71,6 @@ public class AddressBook {
     private static final String MESSAGE_COMMAND_HELP_PARAMETERS = "\tParameters: %1$s";
     private static final String MESSAGE_COMMAND_HELP_EXAMPLE = "\tExample: %1$s";
     private static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
-
     private static final String MESSAGE_EDITED = "Person name edited: %1$s, Phone: %2$s, Email: %3$s";
     private static final String MESSAGE_DISPLAY_PERSON_DATA = "%1$s  Phone Number: %2$s  Email: %3$s";
     private static final String MESSAGE_DISPLAY_LIST_ELEMENT_INDEX = "%1$d. ";
@@ -122,8 +121,7 @@ public class AddressBook {
                                                     + "the last find/list call.";
     private static final String COMMAND_DELETE_PARAMETER = "INDEX";
     private static final String COMMAND_DELETE_EXAMPLE = COMMAND_DELETE_WORD + " 1";
-
-    //Newly added 1st feature
+    
     private static final String COMMAND_EDIT_NAME_WORD = "edit_name";
     private static final String COMMAND_EDIT_NAME_DESC = "Change name of first person whose name is exactly same as formal "
             + "name specified to the latter.";
@@ -387,7 +385,7 @@ public class AddressBook {
         case COMMAND_DELETE_WORD:
             return executeDeletePerson(commandArgs);
         case COMMAND_EDIT_NAME_WORD:
-            return executeEditPersonName(commandArgs);//newly added feature 1
+            return executeEditPersonName(commandArgs);
         case COMMAND_CLEAR_WORD:
             return executeClearAddressBook();
         case COMMAND_HELP_WORD:
@@ -569,16 +567,19 @@ public class AddressBook {
         return String.format(MESSAGE_DELETE_PERSON_SUCCESS, getMessageForFormattedPersonData(deletedPerson));
     }
 
-
+    /**
+     * Edit person original to new name
+     *
+     * @param originalAndNewNames full command args string from the user
+     * @return feedback display message for the operation result
+     */
     private static String executeEditPersonName(String originalAndNewNames) {
         if (originalAndNewNames.equals("")) {
             return MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
-            //need to change to invalid
         }
 
         String [] arrayOfOriginalAndNewNames = originalAndNewNames.split("\\|");
         String originalName = arrayOfOriginalAndNewNames[0].trim();
-
         String newName = arrayOfOriginalAndNewNames[1].trim();
 
         String [] personWithOriginalName = getPersonsWithThisExactName(originalName);
@@ -588,15 +589,14 @@ public class AddressBook {
         }
 
         editNameInPerson(personWithOriginalName, newName);
-
         return getMessageForSuccessfulEditPersonName(personWithOriginalName);
     }
 
     /**
-     * Retrieves all persons in the full model whose names contain some of the specified keywords.
+     * Retrieves the first person in the full model whose name is exactly the same as given.
      *
      * @param originalName for searching
-     * @return list of persons in full model with name containing some of the keywords
+     * @return person with the given name
      */
     private static String[] getPersonsWithThisExactName(String originalName) {
 
@@ -605,7 +605,9 @@ public class AddressBook {
                 return person;
             }
         }
-        return null; //not found
+        
+        //not found
+        return null; 
     }
 
     /**
