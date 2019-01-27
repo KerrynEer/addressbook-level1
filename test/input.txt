@@ -42,6 +42,18 @@
   list
 
 ##########################################################
+# test edit person name command
+##########################################################
+
+  # should match none with no names given
+  edit_name
+  # should only match full words in person names
+  edit_name bet | new
+  # should match full name
+  edit_name Esther Potato | new name
+
+
+##########################################################
 # test find persons command
 ##########################################################
 
